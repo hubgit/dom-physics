@@ -1,7 +1,7 @@
 var Item = function(x, y) {
-	this.mass = 0;
+	this.mass = 100;
 	this.energy = 1000;
-	this.delay = 10;
+	this.delay = 100;
 	this.size = 1;
 	this.interval = null;
 	this.velocity = 1;
@@ -12,11 +12,11 @@ var Item = function(x, y) {
 
 	this.instructions = [
 		['sense'],
-		['move']
+		['move'],
+		['spawn'],
 	];
 
 	this.element = document.createElement('i');
-
 	document.body.appendChild(this.element);
 }
 
@@ -30,27 +30,28 @@ Item.prototype.propel = function(angle) {
 }
 
 Item.prototype.run = function() {
-	var item = this;
-
-	item.instructions.forEach(function(instruction) {
+	this.instructions.forEach(function(instruction) {
 		var method = instruction[0];
 		var args = instruction[1];
 
-		if (typeof item[method] !== 'function') {
+		if (typeof this[method] !== 'function') {
 			return;
 		}
 
-		item[method].apply(item, args);
-	});
+		this[method].apply(this, args);
+	}, this);
 
+	var item = this;
 	window.setTimeout(function() {
 		item.run();
 	}, item.delay);
 }
 
+/*
 Item.prototype.set = function(position, value) {
 	this.memory[position] = value;
 }
+*/
 
 Item.prototype.sense = function() {
 	if (this.energy <= 0) {
@@ -67,32 +68,30 @@ Item.prototype.sense = function() {
 		//this.vector[1] = this.vector[1] * -1; // bounce
 	}
 
-	var potential = {
-		x: this.x + this.vector[0],
-		y: this.y + this.vector[1]
-	};
-
-	var item = document.elementFromPoint(potential.x, potential.y);
-
-	if (item && item.nodeName == 'I' && !item.isEqualNode(this.element)) {
-		console.log('collision');
-		//var average = (this.energy + item.energy) / 2;
-		//this.energy = average;
-		//item.energy = average;
-	}
-
-	this.x = potential.x;
-	this.y = potential.y;
+	this.x += this.vector[0];
+	this.y += this.vector[1];
 }
 
 Item.prototype.move = function() {
-	this.element.style.webkitTransform = [
-		'translate(' + Math.round(this.x) + 'px, ' + Math.round(this.y) + 'px)',
-		'scale(' + this.size + ', ' + this.size + ')', // TODO: needs to use width + height for node detection?
-	].join(' ');
+	var x = Math.round(this.x);
+	var y = Math.round(this.y);
+
+	this.element.style.webkitTransform = 'translate3d(' + x + 'px, ' + y + 'px, 0) \
+	scale3d(' + this.size + ', ' + this.size + ', 0)';
 
 	//this.element.style.backgroundColor = 'rgba(' + this.color.join(',') + ')';
 
 	//this.energy -= this.mass;
 	//console.log(this.energy);
+}
+
+Item.prototype.spawn = function() {
+	if (this.energy <= 0) {
+		return;
+	}
+
+	this.energy /= 2;
+	var energy = this.energy;
+
+
 }

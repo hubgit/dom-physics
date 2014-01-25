@@ -1,5 +1,5 @@
 var universe = {
-	energy: 2020,
+	energy: 1000,
 	width: document.body.offsetWidth,
 	height: document.body.offsetHeight,
 };
@@ -11,9 +11,16 @@ window.setInterval(function() {
 		var x = Math.random() * universe.width;
 		var y = Math.random() * universe.height;
 
-		var light  = new Item(x, y);
-		light.propel(Math.random() * 360);
-		light.run();
+		var angle = Math.random() * 359;
+
+		var item  = new Item(x, y);
+		item.propel(angle);
+		item.run();
+
+		var item  = new Item(x, y);
+		item.mass = -item.mass;
+		item.propel(180 + angle);
+		item.run();
 
 		universe.energy--;
 	}
@@ -24,17 +31,28 @@ window.setInterval(function() {
 		var x = Math.random() * universe.width;
 		var y = Math.random() * universe.height;
 
+		var angle = Math.random() * 359;
+
 		var item  = new Item(x, y);
 		item.mass = 100;
 		item.size = 4;
 		item.color = [255, 0, 0, 1];
 		item.velocity = 0.1;
-		item.propel(Math.random() * 360);
+		item.propel(angle);
+		item.run();
+
+		var item  = new Item(x, y);
+		item.mass = 100;
+		item.size = 4;
+		item.color = [255, 0, 0, 1];
+		item.velocity = 0.1;
+		item.propel(180 + angle);
 		item.run();
 
 		universe.energy -= 1000;
 	}
 }, 100);
+
 
 window.setInterval(function() {
 	console.log('total-energy', universe.energy);

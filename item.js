@@ -1,10 +1,10 @@
 var Item = function(x, y) {
 	this.mass = 100;
-	this.energy = 1000;
+	this.energy = 20;
 	this.delay = 100;
-	this.size = 1;
+	this.size = 200;
 	this.interval = null;
-	this.velocity = 1;
+	this.velocity = 10;
 	this.color = [255, 255, 255, 1];
 
 	this.x = x;
@@ -42,9 +42,7 @@ Item.prototype.run = function() {
 	}, this);
 
 	var item = this;
-	window.setTimeout(function() {
-		item.run();
-	}, item.delay);
+	window.setTimeout(function() { item.run() }, this.delay);
 }
 
 /*
@@ -86,12 +84,37 @@ Item.prototype.move = function() {
 }
 
 Item.prototype.spawn = function() {
-	if (this.energy <= 0) {
+	if (this.energy <= 1) {
 		return;
 	}
 
-	this.energy /= 2;
-	var energy = this.energy;
+	if (Math.random() < 0.9) {
+		return;
+	}
 
+	console.log('spawn');
 
+	var angle = Math.random() * 360;
+
+	var mass = Math.max(50, this.mass / 4);
+	var energy = this.energy / 4;
+	var size = Math.max(1, this.size / 4);
+
+	var item = new Item(this.x, this.y);
+	item.mass = mass;
+	item.energy = energy;
+	item.size = size;
+	item.propel(angle);
+	item.run();
+
+	var item  = new Item(x, y);
+	item.mass = mass;
+	item.energy = energy;
+	item.size = size;
+	item.propel((180 + angle) % 360);
+	item.run();
+
+	this.energy -= energy;
+	this.mass -= mass;
+	this.size = this.size / 2;
 }

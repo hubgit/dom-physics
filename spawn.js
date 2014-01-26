@@ -5,7 +5,7 @@ var universe = {
 
 console.log(universe);
 
-var item  = new Item(universe.width / 2, universe.height / 2, 500, 100);
+var item  = new Item(universe.width / 2, universe.height / 2, 100, 100);
 item.run();
 
 /* helper functions */

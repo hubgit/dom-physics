@@ -5,15 +5,15 @@ var universe = {
 
 console.log(universe);
 
-var x = Math.random() * universe.width;
-var y = Math.random() * universe.height;
-
-var angle = Math.random() * 360;
-
-var item  = new Item(x, y);
-item.propel(angle);
+var item  = new Item(universe.width / 2, universe.height / 2, 500, 100);
 item.run();
 
-var item  = new Item(x, y);
-item.propel((180 + angle) % 360);
-item.run();
+/* helper functions */
+
+function s4() {
+  return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+};
+
+function guid() {
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}

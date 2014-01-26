@@ -1,8 +1,7 @@
 var Item = function(x, y, energy, mass) {
 	this.mass = mass;
 	this.energy = energy;
-	this.delay = 25;
-	this.velocity = 5;
+	this.delay = 50;
 	this.vector = [0, 0];
 	this.children = [];
 	this.parent = null;
@@ -26,8 +25,8 @@ var Item = function(x, y, energy, mass) {
 }
 
 Item.prototype.propel = function(angle) {
-	this.vector[0] = ((Math.cos(angle) * this.velocity) + this.vector[0]) / 2;
-	this.vector[1] = ((Math.sin(angle) * this.velocity) + this.vector[1]) / 2;
+	this.vector[0] += Math.cos(angle) * (this.energy / this.mass);
+	this.vector[1] += Math.sin(angle) * (this.energy / this.mass);
 }
 
 Item.prototype.run = function() {
@@ -47,14 +46,24 @@ Item.prototype.run = function() {
 }
 
 Item.prototype.die = function() {
+	if (this.children.length) {
+		return;
+	}
+
 	var parent = this.parent;
+
+	if (!parent) {
+		return;
+	}
+
+	console.log('die');
 
 	parent.energy += this.energy;
 	parent.mass += this.mass;
 
-	this.energy = 0;
+	//this.energy = 0;
 
-	console.log('removing');
+	console.log('removing', this.element.parentNode);
 	this.element.parentNode.removeChild(this.element);
 
 	var guid = this.guid;
@@ -107,29 +116,34 @@ Item.prototype.move = function() {
 }
 
 Item.prototype.spawn = function() {
+	console.log('spawn');
+
 	if (Math.random() * 100 > this.mass) {
 		return;
 	}
 
-	console.log('spawn');
-
-	while (this.energy > 0.5) {
-		var item = new Item(this.x, this.y);
-
-		item.mass = this.mass / 2;
-		this.mass -= item.mass;
-
-		item.energy = this.energy / 2;
-		this.energy -= item.energy;
-
-		var angle = Math.random() * 360;
-
-		item.propel(angle);
-		this.propel(-angle);
-
-		item.parent = this;
-		this.children.push(item);
-
-		item.run();
+	if (this.energy <= 1) {
+		this.die();
+		return;
 	}
+
+	var item = new Item(this.x, this.y);
+
+	item.mass = this.mass / 2;
+	this.mass -= item.mass;
+
+	item.energy = this.energy / 2;
+	this.energy -= item.energy;
+
+	item.vector = [this.vector[0], this.vector[1]];
+
+	var angle = Math.random() * 360;
+
+	item.propel(angle);
+	this.propel(-angle);
+
+	item.parent = this;
+	this.children.push(item);
+
+	item.run();
 }

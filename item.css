@@ -7,10 +7,20 @@ html, body {
 	overflow: hidden;
 }
 
+/*
+body {
+	-webkit-perspective: 50px;
+}
+*/
+
 i {
 	display: inline-block;
 	position: absolute;
+	width: 1px;
+	height: 1px;
+	/*
 	width: 4px;
 	height: 4px;
 	border-radius: 2px;
+	*/
 }

@@ -1,11 +1,12 @@
 var universe = {
 	width: document.body.offsetWidth,
 	height: document.body.offsetHeight,
+	depth: 25,
 };
 
 console.log(universe);
 
-var item  = new Item(universe.width / 2, universe.height / 2, 100, 100);
+var item  = new Item(universe.width / 2, universe.height / 2, universe.depth / 2);
 item.run();
 
 /* helper functions */

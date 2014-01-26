@@ -1,8 +1,8 @@
 var Item = function(x, y, energy, mass) {
 	this.mass = mass;
 	this.energy = energy;
-	this.delay = 100;
-	this.velocity = 5;
+	this.delay = 10;
+	this.velocity = 1;
 	this.vector = [0, 0];
 	this.children = [];
 	this.parent = null;
@@ -122,12 +122,10 @@ Item.prototype.spawn = function() {
 		item.energy = this.energy / 2;
 		this.energy -= item.energy;
 
-		item.velocity = this.velocity;
-
 		var angle = Math.random() * 360;
 
 		item.propel(angle);
-		this.propel(-angle);
+		//this.propel(-angle);
 
 		item.parent = this;
 		this.children.push(item);

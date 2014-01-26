@@ -1,8 +1,8 @@
 var Item = function(x, y, z) {
 	this.mass = 1;
 	this.energy = 1;
-	this.delay = 20;
-	this.vector = [0, 0, 0];
+	this.delay = 25;
+	this.vector = [1, 1, 0];
 	this.children = [];
 	this.parent = null;
 	this.guid = guid();
@@ -26,9 +26,9 @@ var Item = function(x, y, z) {
 }
 
 Item.prototype.propel = function(angle) {
-	this.vector[0] += Math.cos(angle) * 10 * this.mass;
-	this.vector[1] += Math.sin(angle) * 10 * this.mass;
-	this.vector[2] += Math.tan(angle) * 10 * this.mass;
+	this.vector[0] = (this.vector[0] + Math.cos(angle)) / 2;
+	this.vector[1] = (this.vector[1] + Math.sin(angle)) / 2;
+	//this.vector[2] =;
 }
 
 Item.prototype.run = function() {
@@ -155,6 +155,8 @@ Item.prototype.spawn = function() {
 	this.energy -= item.energy;
 
 	var angle = Math.random() * 360;
+
+	item.vector = [this.vector[0], this.vector[1], this.vector[2]];
 
 	item.propel(angle);
 	this.propel(-angle);
